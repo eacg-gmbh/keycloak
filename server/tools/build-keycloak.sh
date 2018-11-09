@@ -63,6 +63,15 @@ cd /opt/jboss/keycloak/modules/system/layers/base/org/mariadb/jdbc/main
 curl -L http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/$JDBC_MARIADB_VERSION/mariadb-java-client-$JDBC_MARIADB_VERSION.jar > mariadb-jdbc.jar
 cp /opt/jboss/tools/databases/mariadb/module.xml .
 
+########################
+# Prepare health check #
+########################
+
+mkdir -p /opt/jboss/keycloak/modules/system/layers/base/de/tdlabs/keycloak/extensions/keycloak-health-checks/main
+cd /opt/jboss/keycloak/modules/system/layers/base/de/tdlabs/keycloak/extensions/keycloak-health-checks/main
+cp /modules/healthcheck/keycloak-health-checks-1.0.1-SNAPSHOT.jar .
+cp /modules/healthcheck/module.xml .
+
 ######################
 # Configure Keycloak #
 ######################
