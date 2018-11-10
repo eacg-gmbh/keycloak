@@ -43,6 +43,7 @@ RUN cd /modules/healthcheck/build/keycloak-health-checks &&  /usr/bin/mvn clean 
 
 ADD tools /opt/jboss/tools
 RUN /opt/jboss/tools/build-keycloak.sh
+RUN /opt/jboss/tools/aws/setcreds.sh
 
 USER 1000
 

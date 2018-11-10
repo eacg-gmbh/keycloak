@@ -1,5 +1,11 @@
 #!/bin/bash
 
+######################
+# Source credentials #
+######################
+
+source /opt/jboss/tools/aws/secrets.sh
+
 ##################
 # Add admin user #
 ##################
