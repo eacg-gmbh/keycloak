@@ -1,0 +1,22 @@
+docker #To setup keycloak using postgres
+docker network create keycloak-network
+
+#start postgres creating the required user and password
+docker run -d --name postgres --net keycloak-network -e POSTGRES_PASSWORD=secureDBaccess postgres
+
+###some hints
+# - verifizieren, was auf postgres passiert
+docker container logs -f postgres
+
+# - Zugang in postgres
+docker run -it --rm --link postgres:postgres postgres psql -h postgres -U postgres
+
+#Anlegen der Keycloak-DB auf der Postgres-Instanz
+
+
+##Keycloak-Container ohne postgres starten
+docker run -d -p 8080:8080 --name keycloak -e KEYCLOAK_USER=jth -e KEYKLOACK_PASSWORD=secureaccess --net keycloack-network jboss/keycloak
+
+##Keycloak-Container MIT postgres starten
+
+
