@@ -189,7 +189,7 @@
                         "containers": [
                             {
                                 "name": "${APPLICATION_NAME}",
-                                "image": "jboss/keycloak-openshift",
+                                "image": "quay.io/keycloak/keycloak:latest",
                                 "livenessProbe": {
                                     "failureThreshold": 3,
                                     "httpGet": {
@@ -239,7 +239,7 @@
                                     },
                                     {
                                         "name": "JGROUPS_DISCOVERY_PROPERTIES",
-                                        "value": "${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local"
+                                        "value": "dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local"
                                     }
                                 ],
                                 "securityContext": {

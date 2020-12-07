@@ -21,7 +21,7 @@ function autogenerate_keystores() {
     local JKS_KEYSTORE_FILE="${KEYSTORE_TYPE}-keystore.jks"
     local PKCS12_KEYSTORE_FILE="${KEYSTORE_TYPE}-keystore.pk12"
 
-    if [ -d "${X509_KEYSTORE_DIR}" ]; then
+    if [ -f "${X509_KEYSTORE_DIR}/${X509_KEY}" ] && [ -f "${X509_KEYSTORE_DIR}/${X509_CRT}" ]; then
 
       echo "Creating ${KEYSTORES[$KEYSTORE_TYPE]} keystore via OpenShift's service serving x509 certificate secrets.."
 
@@ -41,6 +41,8 @@ function autogenerate_keystores() {
 
       if [ -f "${KEYSTORES_STORAGE}/${JKS_KEYSTORE_FILE}" ]; then
         echo "${KEYSTORES[$KEYSTORE_TYPE]} keystore successfully created at: ${KEYSTORES_STORAGE}/${JKS_KEYSTORE_FILE}"
+      else
+        echo "${KEYSTORES[$KEYSTORE_TYPE]} keystore not created at: ${KEYSTORES_STORAGE}/${JKS_KEYSTORE_FILE} (check permissions?)"
       fi
 
       echo "set keycloak_tls_keystore_password=${PASSWORD}" >> "$JBOSS_HOME/bin/.jbossclirc"
@@ -60,10 +62,16 @@ function autogenerate_keystores() {
   local JKS_TRUSTSTORE_FILE="truststore.jks"
   local JKS_TRUSTSTORE_PATH="${KEYSTORES_STORAGE}/${JKS_TRUSTSTORE_FILE}"
   local PASSWORD=$(openssl rand -base64 32 2>/dev/null)
+  local TEMPORARY_CERTIFICATE="temporary_ca.crt"
   if [ -n "${X509_CA_BUNDLE}" ]; then
     pushd /tmp >& /dev/null
     echo "Creating Keycloak truststore.."
-    csplit -s -z -f crt- "${X509_CA_BUNDLE}" "${X509_CRT_DELIMITER}" '{*}'
+    # We use cat here, so that users could specify multiple CA Bundles using space or even wildcard:
+    # X509_CA_BUNDLE=/var/run/secrets/kubernetes.io/serviceaccount/*.crt
+    # Note, that there is no quotes here, that's intentional. Once can use spaces in the $X509_CA_BUNDLE like this:
+    # X509_CA_BUNDLE=/ca.crt /ca2.crt
+    cat ${X509_CA_BUNDLE} > ${TEMPORARY_CERTIFICATE}
+    csplit -s -z -f crt- "${TEMPORARY_CERTIFICATE}" "${X509_CRT_DELIMITER}" '{*}'
     for CERT_FILE in crt-*; do
       keytool -import -noprompt -keystore "${JKS_TRUSTSTORE_PATH}" -file "${CERT_FILE}" \
       -storepass "${PASSWORD}" -alias "service-${CERT_FILE}" >& /dev/null
@@ -71,6 +79,8 @@ function autogenerate_keystores() {
 
     if [ -f "${JKS_TRUSTSTORE_PATH}" ]; then
       echo "Keycloak truststore successfully created at: ${JKS_TRUSTSTORE_PATH}"
+    else
+      echo "Keycloak truststore not created at: ${JKS_TRUSTSTORE_PATH}"
     fi
 
     # Import existing system CA certificates into the newly generated truststore
@@ -82,7 +92,7 @@ function autogenerate_keystores() {
       -destkeystore "${JKS_TRUSTSTORE_PATH}" \
       -srcstoretype jks -deststoretype jks \
       -storepass "${PASSWORD}" -srcstorepass "changeit" >& /dev/null
-      if [ "$?" -ne "0" ]; then
+      if [ "$?" -eq "0" ]; then
         echo "Successfully imported certificates from system's Java CA certificate bundle into Keycloak truststore at: ${JKS_TRUSTSTORE_PATH}"
       else
         echo "Failed to import certificates from system's Java CA certificate bundle into Keycloak truststore!"

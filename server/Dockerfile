@@ -1,9 +1,10 @@
-FROM jboss/base-jdk:8
+FROM registry.access.redhat.com/ubi8-minimal
 
-ENV KEYCLOAK_VERSION 4.5.0.Final
-ENV JDBC_POSTGRES_VERSION 42.2.2
-ENV JDBC_MYSQL_VERSION 5.1.46
-ENV JDBC_MARIADB_VERSION 2.2.3
+ENV KEYCLOAK_VERSION 11.0.0
+ENV JDBC_POSTGRES_VERSION 42.2.5
+ENV JDBC_MYSQL_VERSION 8.0.22
+ENV JDBC_MARIADB_VERSION 2.5.4
+ENV JDBC_MSSQL_VERSION 8.2.2.jre11
 
 ENV LAUNCH_JBOSS_IN_BACKGROUND 1
 ENV PROXY_ADDRESS_FORWARDING false
@@ -16,7 +17,7 @@ ARG KEYCLOAK_DIST=https://downloads.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloa
 
 USER root
 
-RUN yum install -y epel-release git && yum install -y jq openssl which && yum clean all
+RUN microdnf update -y && microdnf install -y glibc-langpack-en gzip hostname java-11-openjdk-headless openssl tar which && microdnf clean all
 
 ADD tools /opt/jboss/tools
 RUN /opt/jboss/tools/build-keycloak.sh
@@ -24,6 +25,7 @@ RUN /opt/jboss/tools/build-keycloak.sh
 USER 1000
 
 EXPOSE 8080
+EXPOSE 8443
 
 ENTRYPOINT [ "/opt/jboss/tools/docker-entrypoint.sh" ]
 
