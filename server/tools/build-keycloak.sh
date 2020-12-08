@@ -79,11 +79,12 @@ cp /opt/jboss/tools/databases/mssql/module.xml .
 ########################
 # Prepare health check #
 ########################
-
-mkdir -p /opt/jboss/keycloak/modules/system/layers/base/de/tdlabs/keycloak/extensions/keycloak-health-checks/main
-cd /opt/jboss/keycloak/modules/system/layers/base/de/tdlabs/keycloak/extensions/keycloak-health-checks/main
-cp /modules/healthcheck/keycloak-health-checks-1.0.1-SNAPSHOT.jar .
-cp /modules/healthcheck/module.xml .
+if [ "$BUILD_HEALTHCHECK" == "YES" ]; then
+    mkdir -p /opt/jboss/keycloak/modules/system/layers/base/de/tdlabs/keycloak/extensions/keycloak-health-checks/main
+    cd /opt/jboss/keycloak/modules/system/layers/base/de/tdlabs/keycloak/extensions/keycloak-health-checks/main
+    cp /modules/healthcheck/keycloak-health-checks-1.0.1-SNAPSHOT.jar .
+    cp /modules/healthcheck/module.xml .
+fi
 
 ######################
 # Configure Keycloak #
