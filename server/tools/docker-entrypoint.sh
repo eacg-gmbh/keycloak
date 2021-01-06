@@ -33,7 +33,10 @@ SYS_PROPS=""
 # Source credentials #
 ######################
 
-source /opt/jboss/tools/aws/secrets.sh
+SECRETS=/opt/jboss/tools/aws/secrets.sh
+if [ -f "$SECRETS" ]; then
+    source $SECRETS
+fi
 
 ##################
 # Add admin user #
