@@ -31,7 +31,6 @@ RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o awscli-bundle.z
 
 ADD tools /opt/jboss/tools
 RUN /opt/jboss/tools/build-keycloak.sh
-RUN /opt/jboss/tools/aws/setcreds.sh
 
 USER 1000
 
