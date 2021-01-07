@@ -1,5 +1,5 @@
 # PLEASE NOTE
-This repository is linked to a Codepipe that is building the docker image and storing it in ECR.
+This repository is linked to an AWS Codepipe that is building the docker image and storing it in ECR.
 
 # Keycloak
 
