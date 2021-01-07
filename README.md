@@ -1,3 +1,6 @@
+# PLEASE NOTE
+This repository is linked to a Codepipe that is building the docker image and storing it in ECR.
+
 # Keycloak
 
 Keycloak is an Open Source Identity and Access Management solution for modern Applications and Services.
