@@ -1,4 +1,5 @@
-FROM registry.access.redhat.com/ubi8-minimal
+#FROM registry.access.redhat.com/ubi8-minimal
+FROM openjdk:11.0.5-jdk
 
 ENV KEYCLOAK_VERSION 11.0.0
 ENV JDBC_POSTGRES_VERSION 42.2.5
@@ -18,12 +19,12 @@ ARG BUILD_HEALTHCHECK=NO
 
 USER root
 
-RUN microdnf update -y && \
-    microdnf install -y git unzip curl jq python3 && \
-    microdnf install -y glibc-langpack-en gzip hostname java-11-openjdk-headless openssl tar which && \
-    microdnf clean all
+# RUN microdnf update -y && \
+#     microdnf install -y git unzip curl jq python3 && \
+#     microdnf install -y glibc-langpack-en gzip hostname java-11-openjdk-headless openssl tar which && \
+#     microdnf clean all
 
-RUN alternatives --set python /usr/bin/python3
+#RUN alternatives --set python /usr/bin/python3
 
 RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o awscli-bundle.zip && \
     unzip awscli-bundle.zip && ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws && \
