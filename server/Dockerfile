@@ -1,4 +1,5 @@
-FROM registry.access.redhat.com/ubi8-minimal
+#FROM registry.access.redhat.com/ubi8-minimal
+FROM openjdk:11.0.5-jdk
 
 ENV KEYCLOAK_VERSION 11.0.0
 ENV JDBC_POSTGRES_VERSION 42.2.5
@@ -17,7 +18,7 @@ ARG KEYCLOAK_DIST=https://downloads.jboss.org/keycloak/$KEYCLOAK_VERSION/keycloa
 
 USER root
 
-RUN microdnf update -y && microdnf install -y glibc-langpack-en gzip hostname java-11-openjdk-headless openssl tar which && microdnf clean all
+#RUN microdnf update -y && microdnf install -y glibc-langpack-en gzip hostname java-11-openjdk-headless openssl tar which && microdnf clean all
 
 ADD tools /opt/jboss/tools
 RUN /opt/jboss/tools/build-keycloak.sh
