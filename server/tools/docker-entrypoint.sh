@@ -36,6 +36,16 @@ SYS_PROPS=""
 SECRETS=/opt/jboss/tools/aws/secrets.sh
 if [ -f "$SECRETS" ]; then
     source $SECRETS
+    echo "========================================================================="
+    echo ""
+    echo "  DB_VENDOR    =$DB_VENDOR"
+    echo "  DB_USER      =$DB_USER"
+    echo "  DB_ADDR      =$DB_ADDR"
+    echo "  DB_PORT      =$DB_PORT"
+    echo "  DB_DATABASE  =$DB_DATABASE"
+    echo "  KEYCLOAK_USER=$KEYCLOAK_USER"
+    echo ""
+    echo "========================================================================="
 fi
 
 ##################
