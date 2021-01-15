@@ -19,6 +19,12 @@ ARG BUILD_HEALTHCHECK=NO
 
 USER root
 
+RUN apt-get update && \
+    apt-get install -y jq locales && \
+    apt-get clean
+
+RUN locale-gen en_US.UTF-8
+
 # RUN microdnf update -y && \
 #     microdnf install -y git unzip curl jq python3 && \
 #     microdnf install -y glibc-langpack-en gzip hostname java-11-openjdk-headless openssl tar which && \
