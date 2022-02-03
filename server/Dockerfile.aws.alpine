@@ -1,4 +1,4 @@
-FROM openjdk:11.0.5-jdk
+FROM alpine:3.15
 
 ENV KEYCLOAK_VERSION 16.1.1
 ENV JDBC_POSTGRES_VERSION 42.2.5
@@ -18,11 +18,7 @@ ARG BUILD_HEALTHCHECK=NO
 
 USER root
 
-RUN apt-get update && \
-    apt-get install -y jq locales && \
-    apt-get clean
-
-RUN locale-gen en_US.UTF-8
+RUN apk --no-cache add bash coreutils openjdk11 openssl curl
 
 ADD tools /opt/jboss/tools
 RUN /opt/jboss/tools/build-keycloak.sh
@@ -31,6 +27,7 @@ USER 1000
 
 EXPOSE 8080
 EXPOSE 8443
+
 
 ENTRYPOINT [ "/opt/jboss/tools/docker-entrypoint.sh" ]
 

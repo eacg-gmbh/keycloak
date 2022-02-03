@@ -96,7 +96,8 @@ fi
 ########################
 
 if [[ -z ${BIND:-} ]]; then
-    BIND=$(hostname --all-ip-addresses)
+    #BIND=$(hostname --all-ip-addresses)
+    BIND=$(hostname -i)
 fi
 if [[ -z ${BIND_OPTS:-} ]]; then
     for BIND_IP in $BIND
